@@ -1,0 +1,35 @@
+.button-box {
+    display: flex;
+	width: 220px;
+	margin: 35px auto;
+	position: relative;
+	border-radius: 30px;
+	background: #fff
+}
+
+.toggle-btn {
+    flex: 1;
+	padding: 10px;
+	cursor: pointer;
+	background: transparent;
+	border: 0;
+	outline: none;
+	position: relative;
+	text-align: center;
+}
+
+
+
+#btn {
+	left: 0;
+	top: 0;
+	position: absolute;
+	width: 110px;
+	height: 100%;
+	background: #003c96;
+	border-radius: 30px;
+	transition: .5s;
+
+
+}
+

@@ -1,5 +1,6 @@
 import React, { useState } from 'react'; 
 import '../styles/Weather.css'
+import Toggle from '../components/Toggle';
 import axios from 'axios'
 
 const APIKEY = 'COLOQUE SUA CHAVE API AQUI'
@@ -8,6 +9,8 @@ const Weather = () => {
 
     const[data,setData] = useState({})
     const[location, setLocation] = useState('') 
+    const[tempUnit, setTempUnit] = useState('°C')
+    const[velocityUnit, setVelocityUnity] = useState('km/h')
 
     const url = `https://api.openweathermap.org/data/2.5/weather?q=${location}&units=metric&appid=${APIKEY}`
 
@@ -27,7 +30,7 @@ const Weather = () => {
     return(
         
         <div className='weather'>
-            
+            <Toggle/>
             <div className='toggle-Container'>
                 <div className='toggle-box'>
 
@@ -51,7 +54,7 @@ const Weather = () => {
                         <p>{data.name}</p>
                     </div>
                     <div className='temperature'>
-                        {data.main ? <h1>{data.main.temp.toFixed()}</h1> : null}
+                        {data.main ? <h1>{data.main.temp.toFixed()}{tempUnit} </h1> : null} 
                     </div>
 
                     <div className='description'>
@@ -63,15 +66,15 @@ const Weather = () => {
 
                 <div className='footer'>
                 <div className='sensation'>
-                    {data.main ? data.main.feels_like.toFixed() : null}
+                    {data.main ? data.main.feels_like.toFixed() : null} {tempUnit}
                     <p>Sensação Térmica</p>
                 </div>
                 <div className='humidity'>
-                    {data.main ? data.main.humidity : null}
+                    {data.main ? data.main.humidity : null}%
                     <p>Humidade</p>
                 </div>
                 <div className='wind'>
-                    {data.wind ? data.wind.speed.toFixed() : null}
+                    {data.wind ? data.wind.speed.toFixed() : null}{velocityUnit}
                     <p>Vento</p>
                 </div>
 
