@@ -3,6 +3,7 @@ import '../styles/Weather.css'
 import Toggle from '../components/Toggle';
 import axios from 'axios'
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
+import weatherAnimations from '../assets/animations.json'
 
 
 const APIKEY = '99fbd3069d524dddcd584bc06d4e3345'
@@ -13,24 +14,39 @@ const Weather = () => {
     const [tempUnit, setTempUnit] = useState('°C');
     const [lastSearchedLocation, setLastSearchedLocation] = useState('');
     const [velocityUnit, setVelocityUnit] = useState('km/h');
-    const [language, setLanguage] = useState('pt_br')
+    const [language, setLanguage] = useState('pt_br');
+    const [weatherAnimation, setWeatherAnimation] = useState(weatherAnimations[0].link)
+    
 
-    const fetchWeatherData = (loc) => {
+    const fetchWeatherData = async (loc) => {
         const url = `https://api.openweathermap.org/data/2.5/weather?q=${loc}&units=${unit}&lang=${language}&appid=${APIKEY}`;
         
-        axios.get(url).then((response) => {
+        try {
+            const response = await axios.get(url);
             setData(response.data);
-            console.log(response.data);
-        });
+        } catch (error) {
+            console.error("Erro ao buscar dados de clima:", error);
+        }
     };
 
     useEffect(() => {
         if (lastSearchedLocation) {
-            fetchWeatherData(lastSearchedLocation);
+          fetchWeatherData(lastSearchedLocation);
+          setWeatherAnimation(getWeatherAnimation(data.weather?.[0].id)); // Use optional chaining
         } else {
-            fetchWeatherData('Londrina'); 
+          fetchWeatherData('Londrina'); // Default location
         }
-    }, [lastSearchedLocation, unit]); 
+    }, [lastSearchedLocation, unit, data]); // Update animation and data on unit change
+    
+    const getWeatherAnimation = (weatherId) => {
+        const animationLink = 
+                weatherId >= 200 && weatherId < 300 || weatherId === 800 ? weatherAnimations[0].link :
+                weatherId >= 300 && weatherId < 600 ? weatherAnimations[1].link :
+                weatherId >= 600 && weatherId < 800 ? weatherAnimations[3].link :
+                weatherAnimations[2].link;
+        return animationLink;
+    };
+ 
 
 
     const locationSearch = (event) => {
@@ -77,11 +93,15 @@ const Weather = () => {
                        {data.weather ? <p>{data.weather[0].description}</p> : null}
                     </div>
                 </div>
-                <DotLottieReact
-                    src="https://lottie.host/5dde1824-d9e0-45bf-90ca-45e272a75392/OyH2LOTmKa.lottie"
-                    loop
-                    autoplay
-                />
+
+                <div className='lottie-container'>
+                    <DotLottieReact
+                        src={weatherAnimation}
+                        loop
+                        autoplay
+                    />
+                </div>
+
      
                 {data.name &&
                     <div className='footer'>
