@@ -4,7 +4,7 @@
 	margin: 35px auto;
 	position: relative;
 	border-radius: 30px;
-	background: #fff
+	background: #f1f1f1
 }
 
 .toggle-btn {
@@ -16,6 +16,8 @@
 	outline: none;
 	position: relative;
 	text-align: center;
+	transition: .5s;
+
 }
 
 

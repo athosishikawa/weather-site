@@ -4,7 +4,7 @@ import Toggle from '../components/Toggle';
 import axios from 'axios'
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 import weatherAnimations from '../assets/animations.json'
-
+import {motion} from 'framer-motion';
 
 const APIKEY = '99fbd3069d524dddcd584bc06d4e3345'
 const Weather = () => {
@@ -17,6 +17,7 @@ const Weather = () => {
     const [language, setLanguage] = useState('pt_br');
     const [weatherAnimation, setWeatherAnimation] = useState(weatherAnimations[0].link)
     
+    const [isSelected, setIsSelected] = useState(false)
 
     const fetchWeatherData = async (loc) => {
         const url = `https://api.openweathermap.org/data/2.5/weather?q=${loc}&units=${unit}&lang=${language}&appid=${APIKEY}`;
@@ -57,7 +58,7 @@ const Weather = () => {
         }
     };
 
-    const handleTempUnitChange = (isCelsius) => {
+    const handleTempUnitChange = async (isCelsius) => {
         setTempUnit(isCelsius ? '°C' : '°F');
         setUnit(isCelsius ? 'metric' : 'imperial');
         setVelocityUnit(isCelsius ? 'km/h' : 'mph');
@@ -104,20 +105,33 @@ const Weather = () => {
 
      
                 {data.name &&
-                    <div className='footer'>
-                        <div className='sensation'>
-                            {data.main ? data.main.feels_like.toFixed() : null} {tempUnit}
-                            <p>Sensação Térmica</p>
-                        </div>
-                        <div className='humidity'>
-                            {data.main ? data.main.humidity : null}%
-                            <p>Humidade</p>
-                        </div>
-                        <div className='wind'>
-                            {data.wind ? data.wind.speed.toFixed() : null} {velocityUnit}
-                            <p>Vento</p>
-                        </div>
-                    </div>
+                
+                    <motion.div 
+                        transition={{layout : {duration: 0.8, type: "spring"}}}
+                        layout 
+                        whileHover={{ scale: 1.05 }}
+                        className='footer' 
+                        onClick={() =>setIsSelected(!isSelected)}
+                    >
+                        <motion.h2 layout="position">Condições Atuais</motion.h2>
+                        {isSelected &&(
+                            <motion.div className='footer-itens'>
+                                <div className='sensation'>
+                                    {data.main ? data.main.feels_like.toFixed() : null} {tempUnit}
+                                    <p>Sensação Térmica</p>
+                                </div>
+                                <div className='humidity'>
+                                    {data.main ? data.main.humidity : null}%
+                                    <p>Humidade</p>
+                                </div>
+                                <div className='wind'>
+                                    {data.wind ? data.wind.speed.toFixed() : null} {velocityUnit}
+                                    <p>Vento</p>
+                                </div>
+                            </motion.div>
+                        )}
+                        
+                    </motion.div>
                 }
             </div>
         </div>

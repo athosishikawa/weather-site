@@ -40,6 +40,7 @@
 .description {
     text-align: center;
     margin-bottom: 10px;
+    
 }
 
 .location p {
@@ -60,15 +61,33 @@
 
 .footer {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    flex-direction: column; /* Adiciona o layout de coluna */
+    align-items: center; /* Centraliza os itens horizontalmente */
+    justify-content: center; /* Centraliza os itens verticalmente */
     width: 40%;
     border-radius: 20px;
-    background-color: rgba(255, 255, 255, 0.5);
+    background-color: rgba(240, 240, 240, 0.5);
     margin: 1rem auto;
     padding: 1rem;
     text-align: center;
 }
+
+.footer h2{
+    flex: 1;
+    font-weight: 300;
+}
+
+.footer-itens {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    border-radius: 20px;
+    margin: 1rem auto;
+    padding: 1rem;
+    text-align: center;
+}
+
 
 .sensation,
 .humidity,
@@ -90,5 +109,11 @@
 
 .lottie-container{
     width: 35%;
+    transition: .5s;
+
+
+    &:hover{
+        scale: 1.2;
+    }
 }
 
