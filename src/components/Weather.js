@@ -17,6 +17,8 @@ const Weather = () => {
     const [velocityUnit, setVelocityUnit] = useState('km/h');
     const [language, setLanguage] = useState('pt_br');
     const [weatherAnimation, setWeatherAnimation] = useState(weatherAnimations[0].link)
+    const [backgroundColor, setBackgroundColor] = useState(''); // Estado para a cor do fundo
+
     
     const [isSelected, setIsSelected] = useState(false)
 
@@ -34,6 +36,20 @@ const Weather = () => {
         }
     };
 
+    const determineBackgroundColor = (temp) => {
+        if (temp < 15) {
+            return 'linear-gradient(to bottom, rgba(0, 0, 139, 0.7), rgba(0, 0, 255, 0.4))'; // Azul escuro para frio
+        } else if (temp >= 15 && temp < 25) {
+            return 'linear-gradient(to bottom, rgba(70, 130, 230, 0.8), rgba(135, 206, 250, 0.5))'; // Azul médio para temperatura amena
+        } else if (temp >= 25 && temp < 32) {
+            return 'linear-gradient(to bottom, rgba(6, 93, 255, 0.7), rgba(22, 220, 255, 0.1))'; // Azul claro para quente
+        } else {
+            return 'linear-gradient(to bottom, rgba(255, 165, 0, 0.8), rgba(255, 140, 0, 0.5))'; // Laranja para muito quente
+        }
+    };
+    
+    
+
     useEffect(() => {
         if (lastSearchedLocation) {
           fetchWeatherData(lastSearchedLocation);
@@ -46,8 +62,10 @@ const Weather = () => {
     useEffect(() => {
         if (data.weather) {
             setWeatherAnimation(getWeatherAnimation(data.weather[0].id));
+            const currentTemp = unit === 'metric' ? data.main.temp : (data.main.temp - 32) * (5 / 9); // Converte para Celsius se necessário
+            setBackgroundColor(determineBackgroundColor(currentTemp));
         }
-    }, [data.weather]);
+    }, [data.weather, data.main]);
     
     useEffect(() => {
         inputRef.current.focus();
@@ -82,7 +100,7 @@ const Weather = () => {
     };
 
     return (
-        <div className='weather'>
+        <div className='weather' style={{ backgroundImage: backgroundColor }}>
             <Toggle onChange={handleTempUnitChange} />
 
             <div className='search-bar'>
