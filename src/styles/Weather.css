@@ -3,21 +3,57 @@
     flex-direction: column;
     align-items: center;
     padding: 20px;
-    font-family:Verdana, Geneva, Tahoma, sans-serif;
+    height:  100vh;
+    width: 100%;
+    font-family: Montserrat;
+    background-image: linear-gradient(to top, rgba(22, 220, 255, 0.1) ,  rgba(6, 93, 255, 0.7)); 
+
+    
 }
 
 .search-bar {
     margin-bottom: 20px;
-    width: 100%;
+    width: 80%;
+    max-height: 50px;
+    display: flex;
+    flex-direction: row;
+    border: 0px solid #dbdbdb;
+    border-radius: 30px;
+    justify-content: space-between; 
+    align-items: center;
+    background: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(5px);
+    transition: 0.5s;
+
+    &:hover{
+        scale: 1.05;
+    }
+
 }
 
+
 .search-bar input {
-    width: 30%;
+    width: 100%;
+    max-width: 1200px;
     padding: 10px;
-    border: 1px solid #dbdbdb;
-    border-radius: 30px;
     font-size: 16px;
+    border: 0px solid transparent;
+    background-color: transparent;
+    outline: none;
+    margin: 1rem;
+
+    &::placeholder{
+        color: #5a5a5a;
+    }
 }
+
+.search-bar img {
+    width: 40px; /* Define um tamanho fixo */
+    height: fit-content;
+    margin-right: 2%;
+    opacity: 0.5;
+}
+
 
 .container {
     display: flex;
@@ -30,17 +66,8 @@
 .header {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
     align-items: center;
     width: 100%;
-}
-
-.location,
-.temperature,
-.description {
-    text-align: center;
-    margin-bottom: 10px;
-    
 }
 
 .location p {
@@ -61,59 +88,94 @@
 
 .footer {
     display: flex;
-    flex-direction: column; /* Adiciona o layout de coluna */
-    align-items: center; /* Centraliza os itens horizontalmente */
-    justify-content: center; /* Centraliza os itens verticalmente */
-    width: 40%;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 80%;
+    max-width: 400px;
     border-radius: 20px;
-    background-color: rgba(240, 240, 240, 0.5);
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(5px);
     margin: 1rem auto;
     padding: 1rem;
     text-align: center;
+    cursor: pointer;
 }
 
-.footer h2{
-    flex: 1;
-    font-weight: 300;
+.footer h2 {
+    font-weight: 700;
+    color: #003481;
 }
 
 .footer-itens {
     display: flex;
+    flex-direction: row;
+    gap: 10px;
     justify-content: space-between;
-    align-items: center;
     width: 100%;
     border-radius: 20px;
-    margin: 1rem auto;
     padding: 1rem;
     text-align: center;
 }
 
-
-.sensation,
-.humidity,
-.wind{
+.sensation, .humidity, .wind {
     flex: 1;
-    font-size: 24px;
+    font-size: 20px;
     color: #131313;
     text-align: center;
-    padding: 2rem;
+    padding: 1rem;
 }
 
-.sensation p,
-.humidity p,
-.wind p{
+.sensation p, .humidity p, .wind p {
     font-size: 16px;
-    color: #818181;
+    color: #3f3f3f;
     text-align: center;
 }
 
-.lottie-container{
-    width: 35%;
-    transition: .5s;
-
+.lottie-container {
+    width: 100%;
+    max-width: 300px;
+    transition: 0.5s;
 
     &:hover{
         scale: 1.2;
     }
 }
 
+
+@media (max-width: 768px) {
+    .temperature h1 {
+        font-size: 36px;
+    }
+
+    .footer {
+        width: 90%;
+    }
+
+    .footer-itens {
+        flex-direction: column;
+        padding: 0.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .temperature h1 {
+        font-size: 28px;
+    }
+
+    .location p, .sensation, .humidity, .wind {
+        font-size: 16px;
+    }
+
+    .footer-itens {
+        gap: 5px;
+    }
+
+    .search-bar input {
+        width: 100%;
+    }
+
+    .lottie-container {
+        width: 100%;
+    }
+}

@@ -16,10 +16,10 @@ const Toggle = ({onChange}) => {
     };
 
     const selectedCelciusStyle = {
-        color: isCelsius ? "#FFFFFF" : "#000000",
+        color: isCelsius ? "#FFFFFF" : "#003c96",
     };
     const selectedFarenheitsStyle = {
-        color: isCelsius ? "#000000" : "#FFFFFF",
+        color: isCelsius ? "#003c96" : "#FFFFFF",
     };
 
     return (

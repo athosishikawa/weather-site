@@ -1,12 +1,13 @@
-import React, { useState, useEffect } from 'react'; 
+import React, { useState, useEffect, useRef} from 'react'; 
 import '../styles/Weather.css'
 import Toggle from '../components/Toggle';
 import axios from 'axios'
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
-import weatherAnimations from '../assets/animations.json'
+import weatherAnimations from '../assets/animations.json';
+import lupa from '../assets/lupa.png';
 import {motion} from 'framer-motion';
 
-const APIKEY = '99fbd3069d524dddcd584bc06d4e3345'
+const APIKEY = 'COLOQUE SUA CHAVE API AQUI'
 const Weather = () => {
     const [data, setData] = useState({});
     const [location, setLocation] = useState(''); 
@@ -18,6 +19,9 @@ const Weather = () => {
     const [weatherAnimation, setWeatherAnimation] = useState(weatherAnimations[0].link)
     
     const [isSelected, setIsSelected] = useState(false)
+
+    const inputRef = useRef(null);
+
 
     const fetchWeatherData = async (loc) => {
         const url = `https://api.openweathermap.org/data/2.5/weather?q=${loc}&units=${unit}&lang=${language}&appid=${APIKEY}`;
@@ -33,11 +37,21 @@ const Weather = () => {
     useEffect(() => {
         if (lastSearchedLocation) {
           fetchWeatherData(lastSearchedLocation);
-          setWeatherAnimation(getWeatherAnimation(data.weather?.[0].id)); // Use optional chaining
+          setWeatherAnimation(getWeatherAnimation(data.weather?.[0].id)); 
         } else {
           fetchWeatherData('Londrina'); // Default location
         }
-    }, [lastSearchedLocation, unit, data]); // Update animation and data on unit change
+    }, [lastSearchedLocation, unit]); 
+
+    useEffect(() => {
+        if (data.weather) {
+            setWeatherAnimation(getWeatherAnimation(data.weather[0].id));
+        }
+    }, [data.weather]);
+    
+    useEffect(() => {
+        inputRef.current.focus();
+    }, []);
     
     const getWeatherAnimation = (weatherId) => {
         const animationLink = 
@@ -48,7 +62,6 @@ const Weather = () => {
         return animationLink;
     };
  
-
 
     const locationSearch = (event) => {
         if (event.key === 'Enter') {
@@ -74,12 +87,14 @@ const Weather = () => {
 
             <div className='search-bar'>
                 <input 
+                    ref ={inputRef}
                     value={location} 
                     onChange={event => setLocation(event.target.value)} 
                     onKeyDown={locationSearch} 
                     type='text' 
                     placeholder='Pesquise em um local'
                 />
+                <img src = {lupa}/>
             </div>
 
             <div className='container'>

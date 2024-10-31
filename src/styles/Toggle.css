@@ -4,7 +4,10 @@
 	margin: 35px auto;
 	position: relative;
 	border-radius: 30px;
-	background: #f1f1f1
+	background: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(5px);
+
+
 }
 
 .toggle-btn {
@@ -17,6 +20,7 @@
 	position: relative;
 	text-align: center;
 	transition: .5s;
+
 
 }
 
