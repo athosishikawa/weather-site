@@ -1,13 +1,15 @@
 import React, { useState, useEffect, useRef} from 'react'; 
 import '../styles/Weather.css'
 import Toggle from '../components/Toggle';
+import SearchBar from '../components/SearchBar';
+import WeatherInfo from '../components/WeatherInfo';
+import WeatherAnimation from '../components/WeatherAnimation';
+import WeatherFooter from '../components/WeatherFooter';
+
 import axios from 'axios'
-import { DotLottieReact } from '@lottiefiles/dotlottie-react';
-import weatherAnimations from '../assets/animations.json';
-import lupa from '../assets/lupa.png';
-import {motion} from 'framer-motion';
 
 const APIKEY = 'COLOQUE SUA CHAVE API AQUI'
+
 const Weather = () => {
     const [data, setData] = useState({});
     const [location, setLocation] = useState(''); 
@@ -16,10 +18,7 @@ const Weather = () => {
     const [lastSearchedLocation, setLastSearchedLocation] = useState('');
     const [velocityUnit, setVelocityUnit] = useState('km/h');
     const [language, setLanguage] = useState('pt_br');
-    const [weatherAnimation, setWeatherAnimation] = useState(weatherAnimations[0].link)
     const [backgroundColor, setBackgroundColor] = useState(''); // Estado para a cor do fundo
-
-    
     const [isSelected, setIsSelected] = useState(false)
 
     const inputRef = useRef(null);
@@ -36,58 +35,20 @@ const Weather = () => {
         }
     };
 
-    const determineBackgroundColor = (temp) => {
-        if (temp < 15) {
-            return 'linear-gradient(to bottom, rgba(0, 0, 139, 0.7), rgba(0, 0, 255, 0.4))'; // Azul escuro para frio
-        } else if (temp >= 15 && temp < 25) {
-            return 'linear-gradient(to bottom, rgba(70, 130, 230, 0.8), rgba(135, 206, 250, 0.5))'; // Azul médio para temperatura amena
-        } else if (temp >= 25 && temp < 32) {
-            return 'linear-gradient(to bottom, rgba(6, 93, 255, 0.7), rgba(22, 220, 255, 0.1))'; // Azul claro para quente
-        } else {
-            return 'linear-gradient(to bottom, rgba(255, 165, 0, 0.8), rgba(255, 140, 0, 0.5))'; // Laranja para muito quente
-        }
-    };
+
     
     
 
     useEffect(() => {
         if (lastSearchedLocation) {
-          fetchWeatherData(lastSearchedLocation);
-          setWeatherAnimation(getWeatherAnimation(data.weather?.[0].id)); 
+            fetchWeatherData(lastSearchedLocation);
+
         } else {
-          fetchWeatherData('Londrina'); // Default location
+            fetchWeatherData('Londrina'); // Default location
         }
     }, [lastSearchedLocation, unit]); 
 
-    useEffect(() => {
-        if (data.weather) {
-            setWeatherAnimation(getWeatherAnimation(data.weather[0].id));
-            const currentTemp = unit === 'metric' ? data.main.temp : (data.main.temp - 32) * (5 / 9); // Converte para Celsius se necessário
-            setBackgroundColor(determineBackgroundColor(currentTemp));
-        }
-    }, [data.weather, data.main]);
-    
-    useEffect(() => {
-        inputRef.current.focus();
-    }, []);
-    
-    const getWeatherAnimation = (weatherId) => {
-        const animationLink = 
-                weatherId >= 200 && weatherId < 300 || weatherId === 800 ? weatherAnimations[0].link :
-                weatherId >= 300 && weatherId < 600 ? weatherAnimations[1].link :
-                weatherId >= 600 && weatherId < 800 ? weatherAnimations[3].link :
-                weatherAnimations[2].link;
-        return animationLink;
-    };
  
-
-    const locationSearch = (event) => {
-        if (event.key === 'Enter') {
-            fetchWeatherData(location);
-            setLastSearchedLocation(location);
-            setLocation('');
-        }
-    };
 
     const handleTempUnitChange = async (isCelsius) => {
         setTempUnit(isCelsius ? '°C' : '°F');
@@ -103,71 +64,35 @@ const Weather = () => {
         <div className='weather' style={{ backgroundImage: backgroundColor }}>
             <Toggle onChange={handleTempUnitChange} />
 
-            <div className='search-bar'>
-                <input 
-                    ref ={inputRef}
-                    value={location} 
-                    onChange={event => setLocation(event.target.value)} 
-                    onKeyDown={locationSearch} 
-                    type='text' 
-                    placeholder='Pesquise em um local'
-                />
-                <img src = {lupa}/>
-            </div>
+            <SearchBar
+                location={location}
+                setLocation={setLocation}
+                inputRef={inputRef}
+                fetchWeatherData={fetchWeatherData}
+                setLastSearchedLocation={setLastSearchedLocation}
+            />
 
             <div className='container'>
-                <div className='header'>
-                    <div className='location'>
-                        <p>{data.name}</p>
-                    </div>
-                    <div className='temperature'>
-                        {data.main ? <h1>{data.main.temp.toFixed()}{tempUnit}</h1> : null}
-                    </div>
-                    <div className='description'>
-                       {data.weather ? <p>{data.weather[0].description}</p> : null}
-                    </div>
-                </div>
+                <WeatherInfo data={data} tempUnit={tempUnit} />
 
-                <div className='lottie-container'>
-                    <DotLottieReact
-                        src={weatherAnimation}
-                        loop
-                        autoplay
-                    />
-                </div>
-
+                <WeatherAnimation 
+                    weatherId={data.weather?.[0]?.id} 
+                    data={data}
+                    unit={unit}
+                    setBackgroundColor={setBackgroundColor}
+                />
+                <WeatherFooter
+                    data={data}
+                    tempUnit={tempUnit}
+                    velocityUnit={velocityUnit}
+                    isSelected={isSelected}
+                    setIsSelected={setIsSelected}
+                />
      
-                {data.name &&
-                
-                    <motion.div 
-                        transition={{layout : {duration: 0.8, type: "spring"}}}
-                        layout 
-                        whileHover={{ scale: 1.05 }}
-                        className='footer' 
-                        onClick={() =>setIsSelected(!isSelected)}
-                    >
-                        <motion.h2 layout="position">Condições Atuais</motion.h2>
-                        {isSelected &&(
-                            <motion.div className='footer-itens'>
-                                <div className='sensation'>
-                                    {data.main ? data.main.feels_like.toFixed() : null} {tempUnit}
-                                    <p>Sensação Térmica</p>
-                                </div>
-                                <div className='humidity'>
-                                    {data.main ? data.main.humidity : null}%
-                                    <p>Humidade</p>
-                                </div>
-                                <div className='wind'>
-                                    {data.wind ? data.wind.speed.toFixed() : null} {velocityUnit}
-                                    <p>Vento</p>
-                                </div>
-                            </motion.div>
-                        )}
-                        
-                    </motion.div>
-                }
+
             </div>
         </div>
+        
     );
 };
 
