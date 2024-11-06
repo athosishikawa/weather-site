@@ -37,4 +37,4 @@ const Toggle = ({onChange}) => {
       );
 }
 
-export default Toggle
+export default Toggle;

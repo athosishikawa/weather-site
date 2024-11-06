@@ -1,12 +1,24 @@
 import {React, useEffect} from 'react';
 import lupa from '../assets/lupa.png';
 
-const SearchBar = ({location, setLocation, inputRef, fetchWeatherData, setLastSearchedLocation}) => {
-    const locationSearch = (event) => {
+const SearchBar = ({location, setLocation, inputRef, fetchWeatherData, setLastSearchedLocation, error}) => {
+    const locationSearch = async (event) => {
         if (event.key === 'Enter') {
-            fetchWeatherData(location);
-            setLastSearchedLocation(location);
-            setLocation('');
+            if(location){
+
+                const success = await fetchWeatherData(location);
+                
+                if(success){
+                    setLastSearchedLocation(location) ;
+                    console.log("TESTE LOCATE",location);
+                }
+                else {
+                    console.log("Erro encontrado, lastSearchedLocation não será atualizado");
+                }
+                    
+                setLocation('');
+            }
+       
         }
     };
 

@@ -30,8 +30,9 @@ const WeatherAnimation = ({weatherId, data, unit, setBackgroundColor}) => {
 
 const getWeatherAnimation = (weatherId) => {
     const animationLink = 
-            weatherId >= 200 && weatherId < 300 || weatherId === 800 ? weatherAnimations[0].link :
-            weatherId >= 300 && weatherId < 600 ? weatherAnimations[1].link :
+            weatherId === 800 ? weatherAnimations[0].link :
+            weatherId >= 200 && weatherId < 300 ||  weatherId >= 501 && weatherId < 600 ? weatherAnimations[1].link :
+            weatherId >= 300 && weatherId < 501 ? weatherAnimations[4].link :
             weatherId >= 600 && weatherId < 800 ? weatherAnimations[3].link :
             weatherAnimations[2].link;
     return animationLink;

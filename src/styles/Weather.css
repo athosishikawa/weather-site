@@ -179,3 +179,9 @@
         width: 100%;
     }
 }
+
+.error-message{
+    color:rgb(156, 0, 0);
+    font-size: 0.7rem;
+    margin: 1rem;
+}
